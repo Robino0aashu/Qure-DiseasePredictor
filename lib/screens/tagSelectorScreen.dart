@@ -1,8 +1,8 @@
 import 'dart:convert';
-
-import 'package:disease_pred/screens/resultScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TagSelectorScreen extends StatefulWidget {
   @override
@@ -153,6 +153,10 @@ class _TagSelectorScreenState extends State<TagSelectorScreen> {
 
   TextEditingController searchController = TextEditingController();
 
+  final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+
+
   @override
   void initState() {
     super.initState();
@@ -240,7 +244,29 @@ class _TagSelectorScreenState extends State<TagSelectorScreen> {
                       onPressed: () => Navigator.of(context).pop(),
                       child: const Text('Cancel')),
                   ElevatedButton(
-                      onPressed: () {}, child: const Text('Add to History'))
+                      onPressed: () async{
+                        var querySnapshot = await _firestore.collection('History').get();
+                        var arr1,arr2;
+                        bool flag=false;
+                        for (var i in querySnapshot.docs){
+                          if (i.id==_auth.currentUser?.uid){
+                            arr1 = i.data()['Diagnosis'];
+                            arr2 = i.data()['Dates'];
+
+                            arr2.add(DateTime.now());
+                            arr1.add(diagnosis['Prediction']);
+                            flag=true;
+                          }
+                        }
+                        if(flag){
+                          _firestore.collection('History').doc(_auth.currentUser?.uid).update({'Diagnosis':arr1,'Dates':arr2});
+                        }
+                        else{
+                          _firestore.collection('History').doc(_auth.currentUser?.uid).set({'Diagnosis':[diagnosis["Prediction"]],'Dates':[DateTime.now()]});
+                        }
+
+                        Navigator.of(context).pop();
+                      }, child: const Text('Add to History'))
                 ],
               );
             });
@@ -330,27 +356,25 @@ class _TagSelectorScreenState extends State<TagSelectorScreen> {
                 },
               ),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color(0xFF0066FE),
-                shadowColor: const Color(0xFF0066FE),
-                elevation: 5,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: const Color(0xFF0066FE),
+                  shadowColor: const Color(0xFF0066FE),
+                  elevation: 5,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
                 ),
+                child: isSending ? CircularProgressIndicator() : Text('Submit'),
+                onPressed: () {
+                  _uploadSymptoms(selectedTags);
+                },
               ),
-              child: isSending ? CircularProgressIndicator() : Text('Submit'),
-              onPressed: () {
-                _uploadSymptoms(selectedTags);
-                // if (isUploaded){
-                //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                //       builder: (context) =>
-                //           PredictedDisease(diagnosis: diagnosis)));
-                // }
-              },
             ),
           ],
         ),

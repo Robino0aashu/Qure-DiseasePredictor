@@ -1,8 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:disease_pred/widgets/diseaseHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'authScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({
@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  @override
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -53,7 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Spacer(),
                       IconButton(
                           onPressed: () {
-                            //FirebaseAuth.instance.signOut();
+                            FirebaseAuth.instance.signOut();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AuthScreen()));
                           },
                           icon: const Icon(Icons.exit_to_app))
                     ],
@@ -86,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.all(Radius.circular(45)),
                           ),
                           child: TextButton.icon(
-                              onPressed: () =>widget.navigatetoDiagnosis(),
+                              onPressed: () => widget.navigatetoDiagnosis(),
                               icon: const Icon(Icons.medication_outlined),
                               label: const Text(
                                 'Diagnosis',
@@ -117,7 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () async {
                                 Uri url =
                                     Uri(scheme: 'tel', path: "09841017000");
-
                                 if (await canLaunchUrl(url)) {
                                   await launchUrl(url);
                                 } else {
@@ -149,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.centerLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
                     'Your Diagnosis History',
                     style: TextStyle(fontSize: 24),
