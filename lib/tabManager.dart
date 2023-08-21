@@ -27,6 +27,7 @@ class _TabManagerState extends State<TabManager> {
       TagSelectorScreen()
     ];
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         body: _content[pageIndex],
         bottomNavigationBar: FlashyTabBar(
           selectedIndex: pageIndex,
