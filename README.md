@@ -1,4 +1,4 @@
-# disease_pred
+# Disease_Predictor
 
 The project that creates a user friendly application with a simplistic UI that serves the purpose of disease classification and prediction along with providing precautions and preventive measures for the same. 
 
