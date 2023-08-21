@@ -6,7 +6,7 @@ import 'package:disease_pred/widgets/historyItem.dart';
 class DiseaseHistory extends StatefulWidget {
 
 
-  DiseaseHistory({super.key, });
+  const DiseaseHistory({super.key, });
 
   @override
   State<DiseaseHistory> createState() => _DiseaseHistoryState();
@@ -19,52 +19,50 @@ class _DiseaseHistoryState extends State<DiseaseHistory> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.all(10),
-        child: StreamBuilder<QuerySnapshot>(
-          stream: _firestore.collection("History").snapshots(),
-          builder: (context, snapshot){
-            List <Widget> dis = [];
-            bool flag = false;
+    return Container(
+      margin: const EdgeInsets.all(10),
+      child: StreamBuilder<QuerySnapshot>(
+        stream: _firestore.collection("History").snapshots(),
+        builder: (context, snapshot){
+          List <Widget> dis = [];
+          bool flag = false;
 
-            if (snapshot.hasError) {
-              return Text('Something went wrong');
+          if (snapshot.hasError) {
+            return const Center(child: Text("Something went wrong!",style: TextStyle(fontSize: 25,color: Colors.grey),),);
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: Text("Loading...",style: TextStyle(fontSize: 25,color: Colors.grey),),);
+          }
+
+          if (!snapshot.hasData){
+            const CircularProgressIndicator();
+          }
+          else{
+            final data = snapshot.data?.docs;
+            var rec;
+            for (var i in data!){
+              if (i.id==_auth.currentUser?.uid){
+                flag=true;
+                rec = i.data() as Map;
+                break;
+              }
             }
-
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading");
-            }
-
-            if (!snapshot.hasData){
-              CircularProgressIndicator();
+            if(flag){
+              for(var j=0;j<rec['Diagnosis'].length;j++){
+                dis.add(Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: HistoryItem(name: rec['Diagnosis'][j], dateRecorded: rec['Dates'][j].toDate()),
+                ));
+              }
             }
             else{
-              final data = snapshot.data?.docs;
-              var rec;
-              for (var i in data!){
-                if (i.id==_auth.currentUser?.uid){
-                  flag=true;
-                  rec = i.data() as Map;
-                  break;
-                }
-              }
-              if(flag){
-                for(var j=0;j<rec['Diagnosis'].length;j++){
-                  dis.add(Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: HistoryItem(name: rec['Diagnosis'][j], dateRecorded: rec['Dates'][j].toDate()),
-                  ));
-                }
-              }
-              else{
-                return Center(child: Text("No History",style: TextStyle(fontSize: 25,color: Colors.grey),),);
-              }
+              return const Center(child: Text("No History",style: TextStyle(fontSize: 25,color: Colors.grey),),);
             }
-
-            return Expanded(child: ListView(children: dis,),);
           }
-        ),
+
+          return ListView(children: dis,);
+        }
       ),
     );
   }

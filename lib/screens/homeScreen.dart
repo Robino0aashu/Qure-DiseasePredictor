@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'authScreen.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({
+  const HomeScreen({
     Key? key,
     required this.navigatetoDiagnosis,
   }) : super(key: key);
@@ -52,11 +52,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Spacer(),
                       IconButton(
                           onPressed: () {
-                            FirebaseAuth.instance.signOut();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AuthScreen()));
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title:
+                                          const Center(child: Text('Are you sure that you want to logout?')),
+                                      actions: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            TextButton(
+                                              onPressed: () {
+                                                FirebaseAuth.instance.signOut();
+                                                Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const AuthScreen()));
+                                              },
+                                              child: const Text('Log out'),
+                                            ),
+                                            TextButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                                child: const Text('Cancel'))
+                                          ],
+                                        )
+                                      ],
+                                    ));
                           },
                           icon: const Icon(Icons.exit_to_app))
                     ],
@@ -151,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.centerLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: const [
                   Text(
                     'Your Diagnosis History',
                     style: TextStyle(fontSize: 24),
@@ -159,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            DiseaseHistory(),
+            const Expanded(child: DiseaseHistory()),
           ]),
         ),
       ),

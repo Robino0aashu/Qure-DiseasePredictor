@@ -156,7 +156,6 @@ class _TagSelectorScreenState extends State<TagSelectorScreen> {
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
 
-
   @override
   void initState() {
     super.initState();
@@ -240,33 +239,48 @@ class _TagSelectorScreenState extends State<TagSelectorScreen> {
                   ),
                 ),
                 actions: [
-                  ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel')),
-                  ElevatedButton(
-                      onPressed: () async{
-                        var querySnapshot = await _firestore.collection('History').get();
-                        var arr1,arr2;
-                        bool flag=false;
-                        for (var i in querySnapshot.docs){
-                          if (i.id==_auth.currentUser?.uid){
-                            arr1 = i.data()['Diagnosis'];
-                            arr2 = i.data()['Dates'];
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Cancel')),
+                      ElevatedButton(
+                          onPressed: () async {
+                            var querySnapshot =
+                                await _firestore.collection('History').get();
+                            var arr1, arr2;
+                            bool flag = false;
+                            for (var i in querySnapshot.docs) {
+                              if (i.id == _auth.currentUser?.uid) {
+                                arr1 = i.data()['Diagnosis'];
+                                arr2 = i.data()['Dates'];
 
-                            arr2.add(DateTime.now());
-                            arr1.add(diagnosis['Prediction']);
-                            flag=true;
-                          }
-                        }
-                        if(flag){
-                          _firestore.collection('History').doc(_auth.currentUser?.uid).update({'Diagnosis':arr1,'Dates':arr2});
-                        }
-                        else{
-                          _firestore.collection('History').doc(_auth.currentUser?.uid).set({'Diagnosis':[diagnosis["Prediction"]],'Dates':[DateTime.now()]});
-                        }
+                                arr2.add(DateTime.now());
+                                arr1.add(diagnosis['Prediction']);
+                                flag = true;
+                              }
+                            }
+                            if (flag) {
+                              _firestore
+                                  .collection('History')
+                                  .doc(_auth.currentUser?.uid)
+                                  .update({'Diagnosis': arr1, 'Dates': arr2});
+                            } else {
+                              _firestore
+                                  .collection('History')
+                                  .doc(_auth.currentUser?.uid)
+                                  .set({
+                                'Diagnosis': [diagnosis["Prediction"]],
+                                'Dates': [DateTime.now()]
+                              });
+                            }
 
-                        Navigator.of(context).pop();
-                      }, child: const Text('Add to History'))
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Add to History'))
+                    ],
+                  ),
                 ],
               );
             });
