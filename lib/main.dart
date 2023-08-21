@@ -1,9 +1,15 @@
 import 'package:disease_pred/screens/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 
-void main(){
-  // WidgetsBinding widgetsBinding=WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const MyApp());
 }
@@ -37,8 +43,16 @@ class _MyAppState extends State<MyApp> {
         ),
         colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.green),
       ),
-      home: const SplashScreen(isAuth: true),
-      //SplashScreen(isAuth: false) for not logged in.
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return const SplashScreen(isAuth: true);
+            } else
+              return const SplashScreen(isAuth: false);
+          }
+          //SplashScreen(isAuth: false) for not logged in.
+          ),
     );
   }
 }

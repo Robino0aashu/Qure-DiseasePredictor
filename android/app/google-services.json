@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "304483999111",
+    "project_id": "disease-predictor-fbd05",
+    "storage_bucket": "disease-predictor-fbd05.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:304483999111:android:5a3bfcd43e341144c08722",
+        "android_client_info": {
+          "package_name": "com.example.disease_pred"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "304483999111-pmii61ogo08di1ojhaurgc2680ii1ud0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsK0uk1N09cxE4m5svxZHtgd3LLv-xtLQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "304483999111-pmii61ogo08di1ojhaurgc2680ii1ud0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

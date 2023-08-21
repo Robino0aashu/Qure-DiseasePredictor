@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'dart:math';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'homeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:disease_pred/tabManager.dart';
+
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -15,60 +18,51 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredEmail = '';
   var _enteredPassowrd = '';
   var _enteredUsername = '';
-  File? _selectedImage;
+  final auth = FirebaseAuth.instance;
 
-  // void _submit() async {
-  //   setState(() {
-  //     isAuthenticating = true;
-  //   });
+    var isLogin = true;
+    var isAuthenticating = false;
 
-  //   bool isValid = _form.currentState!.validate();
+    Future<bool> _submit() async {
+      setState(() {
+        isAuthenticating = true;
+      });
+  
+      bool isValid = _form.currentState!.validate();
+  
+      if (!isValid && !isLogin) {
+        setState(() {
+          isAuthenticating = false;
+        });
+        return false;
+      }
+      _form.currentState!.save();
+  
+      try {
+        if (isLogin) {
+          final userCredentials = await auth.signInWithEmailAndPassword(
+              email: _enteredEmail, password: _enteredPassowrd);
+        } else {
+          final userCredentials = await auth.createUserWithEmailAndPassword(
+            email: _enteredEmail,
+            password: _enteredPassowrd,
+          );
+        }
+        return true;
+        
+      } on FirebaseAuthException catch (error) {
+        setState(() {
+          isAuthenticating = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(error.message ?? 'Authentication failed'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ));
+        return false;
+      }
+  }
 
-  //   if (!isValid || _selectedImage == null && !isLogin) {
-  //     setState(() {
-  //       isAuthenticating = false;
-  //     });
-  //     return;
-  //   }
-  //   _form.currentState!.save();
-  //   try {
-  //     if (isLogin) {
-  //       final userCredentials = await _firebase.signInWithEmailAndPassword(
-  //           email: _enteredEmail, password: _enteredPassowrd);
-  //     } else {
-  //       final userCredentials = await _firebase.createUserWithEmailAndPassword(
-  //         email: _enteredEmail,
-  //         password: _enteredPassowrd,
-  //       );
-  //       final storageRef = FirebaseStorage.instance
-  //           .ref()
-  //           .child('user_images')
-  //           .child('${userCredentials.user!.uid}.jpg');
-  //       await storageRef.putFile(_selectedImage!);
-  //       final imageUrl = await storageRef.getDownloadURL();
-  //       print(imageUrl);
-  //       await FirebaseFirestore.instance
-  //           .collection('users')
-  //           .doc(userCredentials.user!.uid)
-  //           .set({
-  //         'username': _enteredUsername,
-  //         'email': _enteredEmail,
-  //         'image_url': imageUrl,
-  //       });
-  //     }
-  //   } on FirebaseAuthException catch (error) {
-  //     setState(() {
-  //       isAuthenticating = false;
-  //     });
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text(error.message ?? 'Authentication failed'),
-  //       backgroundColor: Theme.of(context).colorScheme.error,
-  //     ));
-  //   }
-  // }
 
-  var isLogin = true;
-  var isAuthenticating = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +126,8 @@ class _AuthScreenState extends State<AuthScreen> {
                               if (!isLogin)
                                 TextFormField(
                                   decoration: const InputDecoration(
-                                      labelText: 'Username'),
+                                      labelText: 'Username'
+                                  ),
                                   enableSuggestions: false,
                                   validator: (value) {
                                     if (value == null ||
@@ -173,7 +168,13 @@ class _AuthScreenState extends State<AuthScreen> {
                                           backgroundColor: Theme.of(context)
                                               .colorScheme
                                               .primaryContainer),
-                                      onPressed: () {},
+                                      onPressed: () async{
+                                        if (await _submit()){
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>TabManager()));
+                                        }
+                                            
+                                        
+                                      },
                                       child: Text(isLogin ? 'Login' : 'Signup'),
                                     ),
                               if (!isAuthenticating)
