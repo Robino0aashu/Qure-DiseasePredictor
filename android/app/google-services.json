@@ -1,7 +1,7 @@
 {
   "project_info": {
-    "project_number": "304483999111",
-    "project_id": "disease-predictor-fbd05",
+    "project_number": <Project-No>,
+    "project_id": <Project-ID>,
     "storage_bucket": "disease-predictor-fbd05.appspot.com"
   },
   "client": [
@@ -20,7 +20,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDsK0uk1N09cxE4m5svxZHtgd3LLv-xtLQ"
+          "current_key": <API-Key>
         }
       ],
       "services": {
