@@ -1,16 +1,42 @@
-# Disease_Predictor
+# Disease Predictor
 
-The project that creates a user friendly application with a simplistic UI that serves the purpose of disease classification and prediction along with providing precautions and preventive measures for the same. 
+Disease Predictor is a Flutter app utilizing machine learning to predict diseases based on symptoms provided by the user. It simplifies the process of understanding potential health issues by leveraging a trained model and provides result with an accuracy of more than 98%.
+
+## Features
+
+- **Symptom Input**: Users can input their symptoms for disease prediction.
+- **ML-Based Prediction**: Utilizes machine learning to predict diseases based on provided symptoms.
+- **Informative Results**: Provides informative details about the predicted disease and further actions.
+- **User-Friendly Interface**: Easy-to-use and intuitive design for seamless interaction.
+
+## Tech Stack
+
+- **Flutter**: Framework for building the cross-platform app.
+- **Machine Learning Model**: Utilizes a trained ML model.
+- **Backend (if applicable)**: Backend was developed using FAST API and hosted on Render.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To run this app:
 
-A few resources to get you started if this is your first Flutter project:
+1. Clone the repository: `git clone https://github.com/Robino0aashu/Qure-DiseasePredictor`
+2. Navigate to the project directory.
+3. Open the files and run `pub get` in terminal to get all the dependencies.
+4. Run the app using Flutter: `flutter run` or you can generate an apk using `flutter build apk` and run it on your device.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Usage
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Open the app on your device.
+2. Input your symptoms as requested.
+3. Get predictions and suggested actions based on the model's analysis.
+
+## Future Improvements
+
+- **Enhanced UI/UX**: Improving user experience and interface design.
+- **Expanding Disease Database**: Adding more diseases for accurate predictions.
+- **Real-time Updates**: Integrating real-time data for better predictions.
+
+## Contact
+
+For any inquiries or support, reach out to us at [contact@diseasepredictor.com](mailto:aashu.20404kr@gmail.com).
+
