@@ -15,6 +15,9 @@ Disease Predictor is a Flutter app utilizing machine learning to predict disease
 - **Machine Learning Model**: Utilizes a trained ML model.
 - **Backend (if applicable)**: Backend was developed using FAST API and hosted on Render.
 
+## Screenshot
+![App UI](https://github.com/Robino0aashu/Qure-DiseasePredictor/assets/103640421/faf7115f-d2d3-45aa-bb53-3331cb29f05d)
+
 ## Getting Started
 
 To run this app:
